@@ -1,0 +1,6 @@
+<config>
+        <event name="checkout_onepage_controller_success_action">
+            <observer name="successful_payment_order"
+                      instance="Droppa\DroppaShipping\Observer\PaymentsObserver" />
+        </event>
+</config>
