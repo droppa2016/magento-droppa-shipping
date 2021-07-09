@@ -105,6 +105,7 @@ if (!class_exists('DroppaShipping')) {
             }
 
             $method->setPrice($this->_total_amount);
+            $method->setCost($this->_total_amount);
 
             try {
                 return $result->append($method);
