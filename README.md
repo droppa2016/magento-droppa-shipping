@@ -24,6 +24,7 @@ Requires PHP: 7.0
 
 * All App users must be clients with Droppa Group and should have a Business account along with an [API key and Service ID]. Please contact Droppa Group administration to help set it up - itsupport@droppa.co.za
 * Please make sure that App extension has been installed in your Store.
+* NB: Please make sure that your store configuration is set to South Africa & Currency to ZAR as currently the Droppa Shipping App supports shipping for addresses & postal codes valid for South Africa.
 
 ## Installation
 
@@ -43,6 +44,13 @@ php ./bin/magento cache:flush
 * Navigate to your Magento Admin site > Stores > Configurations > Sales > Delivery Methods.
 * Enable the Droppa Shipping App, place in your API and Service keys generated from the Dropp Group platform by our developers. itsupport@droppa.co.za
 
+### Post-Installation
+
+* Enable the Droppa Shipping app, place in your API and Service keys generated from the Dropp Group platform by our developers. itsupport@droppa.co.za by navigating to your Admin dashboard site > Stores > Configurations > Sales > Delivery Methods.
+* Take Note the Droppa Shipping App works only for South Africa Shipping Addresses: Example of South African Addresses & their postal codes:
+* Below are some of the Province Postal Codes but not limited to: Provinces -> Gauteng (2001), Mpumalanga (1201), North-West (2745), FreeState (9301), Western Cape (8001), Eastern Cape (5605), Kwazulu-Natal (3201), Limpopo (0699) & Northern Cape (8301)
+
+
 ## Frequently Asked Questions
 
 1. Does the Droppa Shipping App requires an authorization access key?
@@ -52,6 +60,10 @@ php ./bin/magento cache:flush
 2. How long does it take to activate the App.
 
 - As soon as the App is downloaded and activated on the Magento dashboard, users can communicate with the support team itsupport@droppa.co.za for instructions on activating the App.
+
+3. Does the App work for all countries on shipping destinations?
+
+- No. Droppa Shipping App currently supports shipping for addresses within South Africa including their postal codes. So the store owner needs to set Store country to South Africa & Currency to ZAR on the store configuration dashboard.
 
 ## Screenshots
 
