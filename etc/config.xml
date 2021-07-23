@@ -9,6 +9,7 @@
                 <title>Droppa Shipping</title>
                 <api_key/>
                 <service_key/>
+                <price>0</price>
                 <shipping_cost>0</shipping_cost>
                 <sallowspecific>0</sallowspecific>
                 <sort_order>15</sort_order>

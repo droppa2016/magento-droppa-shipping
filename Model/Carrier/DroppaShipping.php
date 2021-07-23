@@ -89,28 +89,35 @@ if (!class_exists('DroppaShipping')) {
                 $_fullDimensionContents
             );
 
-            $useCurlObject = new Curl(
-                $this->_scopeConfig->getValue('carriers/droppashipping/api_key', ScopeInterface::SCOPE_WEBSITES),
-                $this->_scopeConfig->getValue('carriers/droppashipping/service_key', ScopeInterface::SCOPE_WEBSITES)
-            );
-            $response = $useCurlObject->curlEndpoint($this->_quote_endpoint, $this->_quote_body, 'POST');
-            $object = '';
+            $isModuleActive = $this->_scopeConfig->getValue('carriers/droppashipping/active', ScopeInterface::SCOPE_WEBSITES);
+            $checkAPIKey = $this->_scopeConfig->getValue('carriers/droppashipping/api_key', ScopeInterface::SCOPE_WEBSITES);
+            $checkServiceKey = $this->_scopeConfig->getValue('carriers/droppashipping/service_key', ScopeInterface::SCOPE_WEBSITES);
 
-            if (isset($response) && $this->cart->getQuote()->getId()) {
-                $object = json_decode($response, true);
+            if ($isModuleActive === 0 || $isModuleActive == "0" && $checkAPIKey == 'undefined' && $checkServiceKey == 'undefined') {
+                $this->logger->info("Deactived Module = {$isModuleActive}, API Key = {$checkServiceKey}, Service Key = {$checkAPIKey}");
+                return false;
             }
 
-            if (!$this->_total_amount = $object['amount']) {
-                return $this->_total_amount = $this->getShippingPrice();
-            }
+            if ($isModuleActive === "1" || $isModuleActive === 1) {
+                $useCurlObject = new Curl($checkAPIKey, $checkServiceKey);
 
-            $method->setPrice($this->_total_amount);
-            $method->setCost($this->_total_amount);
+                $response = $useCurlObject->curlEndpoint($this->_quote_endpoint, $this->_quote_body, 'POST');
+                $object = '';
 
-            try {
-                return $result->append($method);
-            } catch (Exception $e) {
-                $this->logger->error($e->getMessage(), $e->getCode());
+                if (isset($response) && $this->cart->getQuote()->getId()) {
+                    $object = json_decode($response, true);
+
+                    $this->_total_amount = ($this->getShippingPrice() ? $this->getShippingPrice() : $object['amount']);
+
+                    $method->setPrice($this->_total_amount);
+                    $method->setCost($this->_total_amount);
+
+                    try {
+                        return $result->append($method);
+                    } catch (Exception $e) {
+                        $this->logger->error($e->getMessage(), $e->getCode());
+                    }
+                }
             }
         }
 

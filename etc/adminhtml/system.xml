@@ -24,6 +24,10 @@
                     <label>Service Key</label>
                 </field>
 
+                <field id="price" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Price</label>
+                </field>
+
                 <field id="unit_of_measure" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" canRestore="1">
                     <label>Weight Unit</label>
                     <source_model>Magento\Ups\Model\Config\Source\Unitofmeasure</source_model>

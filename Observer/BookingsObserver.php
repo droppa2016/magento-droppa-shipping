@@ -115,23 +115,27 @@ class BookingsObserver extends Template implements ObserverInterface
             "customerName" => $customerName,
             "customerPhone" => $custPhone,
             "customerEmail" => $customerEmail,
-            "instructions" => '',
+            "instructions" => 'Magento Default Intructions',
             "price" => $base_shipping_amount,
             "parcelDimensions" => $_bookingDimensions
         ];
 
-        $useCurlObject = new Curl($adminAPI, $adminServ);
+        if (!$adminAPI && !$adminServ) {
+            return false;
+        } else {
+            $useCurlObject = new Curl($adminAPI, $adminServ);
 
-        $response = $useCurlObject->curlEndpoint($this->booking_endpoint, $_quote_body, 'POST');
-        $responseResults = json_decode($response, true);
+            $response = $useCurlObject->curlEndpoint($this->booking_endpoint, $_quote_body, 'POST');
+            $responseResults = json_decode($response, true);
 
-        $resources = $objectManager::getInstance()->get('Magento\Framework\App\ResourceConnection');
-        $connection = $resources->getConnection();
+            $resources = $objectManager::getInstance()->get('Magento\Framework\App\ResourceConnection');
+            $connection = $resources->getConnection();
 
-        if ((float) $responseResults['price'] >= '05.00') {
-            $installCustomTable = $resources->getTableName('droppa_booking_object');
-            $BookingId = "INSERT INTO " . $installCustomTable . "(booking_id) VALUES ('" . $responseResults['oid'] . "')";
-            return $connection->query($BookingId);
+            if ((float) $responseResults['price'] >= '05.00') {
+                $installCustomTable = $resources->getTableName('droppa_booking_object');
+                $BookingId = "INSERT INTO " . $installCustomTable . "(booking_id) VALUES ('" . $responseResults['oid'] . "')";
+                return $connection->query($BookingId);
+            }
         }
     }
 }
