@@ -28,7 +28,8 @@ if (!class_exists('DroppaShipping')) {
         protected $_scopeConfig;
         protected $logger;
         protected $cart;
-        public string $_quote_endpoint = 'https://www.droppa.co.za/droppa/services/plugins/quotes';
+        public string $_quote_endpoint = 'https://droppergroup.co.za/droppa/services/plugins/quotes';
+        // public string $_quote_endpoint = 'https://www.droppa.co.za/droppa/services/plugins/quotes';
         public array $_quote_body = [];
         public float $_total_amount;
 
@@ -103,8 +104,8 @@ if (!class_exists('DroppaShipping')) {
 
                 $response = $useCurlObject->curlEndpoint($this->_quote_endpoint, $this->_quote_body, 'POST');
                 $object = '';
-
-                if (isset($response) && $this->cart->getQuote()->getId()) {
+                // && $this->cart->getQuote()->getId()
+                if (isset($response)) {
                     $object = json_decode($response, true);
 
                     $this->_total_amount = ($this->getShippingPrice() ? $this->getShippingPrice() : $object['amount']);

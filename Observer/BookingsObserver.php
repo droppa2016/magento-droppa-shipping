@@ -18,7 +18,8 @@ use Psr\Log\LoggerInterface;
 
 class BookingsObserver extends Template implements ObserverInterface
 {
-    public string $booking_endpoint = 'https://www.droppa.co.za/droppa/services/plugins/book';
+    /* public string $booking_endpoint = 'https://www.droppa.co.za/droppa/services/plugins/book'; */
+    public $booking_endpoint = 'https://droppergroup.co.za/droppa/services/plugins/book';
     protected $logger;
     protected $storeManager;
     protected $scopeConfig;
@@ -97,13 +98,20 @@ class BookingsObserver extends Template implements ObserverInterface
             $_bookingDimensions[] = $this->bookingPluginAttributes(0, 0, 0, $productWeight);
         }
 
+        $getNewSurburb = new Curl($adminAPI, $adminServ);
+        $fromSuburbResponse = $getNewSurburb->curlEndpoint("https://droppergroup.co.za/droppa/services/parties/suburb/{$adminPCode}", '', 'GET');
+        $ToSuburbResponse = $getNewSurburb->curlEndpoint("https://droppergroup.co.za/droppa/services/parties/suburb/{$dropOffPinCode}", '', 'GET');
+
+        $pickUpPostalCodeSuburb = json_decode($fromSuburbResponse, true);
+        $dropOffPostalCodeSuburb = json_decode($ToSuburbResponse, true);
+
         $_quote_body = [
             "serviceId" => $adminServ,
             "platform" => "Magento",
             "pickUpPCode" => $adminPCode,
             "dropOffPCode" => $dropOffPinCode,
-            "fromSuburb" => $adminStoreCity,
-            "toSuburb" => $dropOffCity,
+            "fromSuburb" => $pickUpPostalCodeSuburb['suburb'],
+            "toSuburb" => $dropOffPostalCodeSuburb['suburb'],
             "province" => $adRegion,
             "destinationProvince" => $dropOffRegion,
             "pickUpAddress" => $adStr1 . ', ' . $adminStoreCity . ', ' . $adminPCode . ', ' . $adRegion,
@@ -115,7 +123,7 @@ class BookingsObserver extends Template implements ObserverInterface
             "customerName" => $customerName,
             "customerPhone" => $custPhone,
             "customerEmail" => $customerEmail,
-            "instructions" => 'Magento Default Intructions',
+            "instructions" => 'Magento Default Instructions',
             "price" => $base_shipping_amount,
             "parcelDimensions" => $_bookingDimensions
         ];
