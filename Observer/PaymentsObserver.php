@@ -16,8 +16,8 @@ class PaymentsObserver implements ObserverInterface
     public $bookingObjectID;
     protected $logger;
     protected $scopeConfig;
-    protected $PROD_CONFIRM_PAYMENT_SERVICE = 'https://droppergroup.co.za/droppa/services/plugins/confirm/';
-    // protected string $PROD_CONFIRM_PAYMENT_SERVICE = 'https://www.droppa.co.za/droppa/services/plugins/confirm/';
+    // protected $PROD_CONFIRM_PAYMENT_SERVICE = 'https://droppergroup.co.za/droppa/services/plugins/confirm/';
+    protected string $PROD_CONFIRM_PAYMENT_SERVICE = 'https://www.droppa.co.za/droppa/services/plugins/confirm/';
 
     public function __construct(
         LoggerInterface $logger,

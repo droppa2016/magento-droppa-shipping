@@ -28,8 +28,8 @@ if (!class_exists('DroppaShipping')) {
         protected $_scopeConfig;
         protected $logger;
         protected $cart;
-        public string $_quote_endpoint = 'https://droppergroup.co.za/droppa/services/plugins/quotes';
-        // public string $_quote_endpoint = 'https://www.droppa.co.za/droppa/services/plugins/quotes';
+        // public string $_quote_endpoint = 'https://droppergroup.co.za/droppa/services/plugins/quotes';
+        public string $_quote_endpoint = 'https://www.droppa.co.za/droppa/services/plugins/quotes';
         public array $_quote_body = [];
         public float $_total_amount;
 
