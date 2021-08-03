@@ -99,8 +99,8 @@ class BookingsObserver extends Template implements ObserverInterface
         }
 
         $getNewSurburb = new Curl($adminAPI, $adminServ);
-        $fromSuburbResponse = $getNewSurburb->curlEndpoint("https://droppergroup.co.za/droppa/services/parties/suburb/{$adminPCode}", '', 'GET');
-        $ToSuburbResponse = $getNewSurburb->curlEndpoint("https://droppergroup.co.za/droppa/services/parties/suburb/{$dropOffPinCode}", '', 'GET');
+        $fromSuburbResponse = $getNewSurburb->curlEndpoint("https://www.droppa.co.za/droppa/services/parties/suburb/{$adminPCode}", '', 'GET');
+        $ToSuburbResponse = $getNewSurburb->curlEndpoint("https://www.droppa.co.za/droppa/services/parties/suburb/{$dropOffPinCode}", '', 'GET');
 
         $pickUpPostalCodeSuburb = json_decode($fromSuburbResponse, true);
         $dropOffPostalCodeSuburb = json_decode($ToSuburbResponse, true);
