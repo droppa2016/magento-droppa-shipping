@@ -18,7 +18,7 @@ use Psr\Log\LoggerInterface;
 
 class BookingsObserver extends Template implements ObserverInterface
 {
-    public string $booking_endpoint = 'https://www.droppa.co.za/droppa/services/plugins/book';
+    public $booking_endpoint = 'https://www.droppa.co.za/droppa/services/plugins/book';
     // public $booking_endpoint = 'https://droppergroup.co.za/droppa/services/plugins/book';
     protected $logger;
     protected $storeManager;
