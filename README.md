@@ -93,3 +93,7 @@ php ./bin/magento cache:flush
 ### 1.0.3
 
 * Modified our storage system to save the API and Service Key.
+
+### 1.0.4 And 1.0.5
+
+* Added a new rate calculator service that determines the quotation based on the product mass only.
