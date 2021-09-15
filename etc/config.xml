@@ -6,7 +6,7 @@
                 <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
                 <active>0</active>
                 <name>Droppa Shipping</name>
-                <title>Droppa Shipping</title>
+                <title>Delivery based on mass</title>
                 <api_key/>
                 <service_key/>
                 <price>0</price>

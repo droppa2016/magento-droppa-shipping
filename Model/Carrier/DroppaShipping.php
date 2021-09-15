@@ -28,8 +28,9 @@ if (!class_exists('DroppaShipping')) {
         protected $_scopeConfig;
         protected $logger;
         protected $cart;
+        public string $_quote_endpoint = "https://droppa.co.za/droppa/services/plugins/fixed/rates";
         // public string $_quote_endpoint = 'https://droppergroup.co.za/droppa/services/plugins/quotes';
-        public string $_quote_endpoint = 'https://www.droppa.co.za/droppa/services/plugins/quotes';
+        // public string $_quote_endpoint = 'https://www.droppa.co.za/droppa/services/plugins/quotes';
         public array $_quote_body = [];
         public float $_total_amount;
 
@@ -83,12 +84,14 @@ if (!class_exists('DroppaShipping')) {
                 'parcel_mass' => (int)$request->getPackageWeight()
             ];
 
-            $this->_quote_body = $this->quotesPluginAttributes(
-                $request->getOrigPostcode(),
-                $request->getDestPostcode(),
-                $request->getPackageWeight(),
-                $_fullDimensionContents
-            );
+            // $this->_quote_body = $this->quotesPluginAttributes(
+            //     $request->getOrigPostcode(),
+            //     $request->getDestPostcode(),
+            //     $request->getPackageWeight(),
+            //     $_fullDimensionContents
+            // );
+
+            $this->_quote_body = $this->quotesPluginAttributes($request->getPackageWeight(), $_fullDimensionContents);
 
             $isModuleActive = $this->_scopeConfig->getValue('carriers/droppashipping/active', ScopeInterface::SCOPE_WEBSITES);
             $checkAPIKey = $this->_scopeConfig->getValue('carriers/droppashipping/api_key', ScopeInterface::SCOPE_WEBSITES);
@@ -108,7 +111,7 @@ if (!class_exists('DroppaShipping')) {
                 if (isset($response)) {
                     $object = json_decode($response, true);
 
-                    $this->_total_amount = ($this->getShippingPrice() ? $this->getShippingPrice() : $object['amount']);
+                    $this->_total_amount = ($this->getShippingPrice() ? $this->getShippingPrice() : $object['price']);
 
                     $method->setPrice($this->_total_amount);
                     $method->setCost($this->_total_amount);
@@ -122,20 +125,30 @@ if (!class_exists('DroppaShipping')) {
             }
         }
 
-        public function quotesPluginAttributes(
-            $_pickUpPCode,
-            $_dropOffPCode,
-            $_product_total_mass,
-            $_parcelDimensionsArrayHolder
-        ): array {
-            (array)$_get_product_attributes = new Quotes($_pickUpPCode, $_dropOffPCode, $_product_total_mass);
+        // public function quotesPluginAttributes(
+        //     $_pickUpPCode,
+        //     $_dropOffPCode,
+        //     $_product_total_mass,
+        //     $_parcelDimensionsArrayHolder
+        // ): array {
+        //     (array)$_get_product_attributes = new Quotes($_pickUpPCode, $_dropOffPCode, $_product_total_mass);
 
-            return [
-                "pickUpCode" => $_get_product_attributes->getPickUpCode(),
-                "dropOffCode" => $_get_product_attributes->getDropOffCode(),
-                "mass" => $_get_product_attributes->getWeight(),
-                "parcelDimensions" => [$_parcelDimensionsArrayHolder]
+        //     return [
+        //         "pickUpCode" => $_get_product_attributes->getPickUpCode(),
+        //         "dropOffCode" => $_get_product_attributes->getDropOffCode(),
+        //         "mass" => $_get_product_attributes->getWeight(),
+        //         "parcelDimensions" => [$_parcelDimensionsArrayHolder]
+        //     ];
+        // }
+
+        public function quotesPluginAttributes($_product_total_mass, $_parcelDimensionsArrayHolder)
+        {
+            $calculate_distance_for_quotes = [
+                "mass" => $_product_total_mass,
+                "dimensions" => [$_parcelDimensionsArrayHolder]
             ];
+
+            if (is_array($calculate_distance_for_quotes)) return $calculate_distance_for_quotes;
         }
     }
 }
