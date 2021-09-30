@@ -100,8 +100,6 @@ if (!class_exists('DroppaShipping')) {
                     "dimensions" => [$get_wooCommerce_rates]
                 ];
 
-                $this->logger->log(100, json_encode($this->_quote_body, JSON_PRETTY_PRINT));
-
                 $response = $useCurlObject->curlEndpoint($this->_quote_endpoint, $this->_quote_body, 'POST');
 
                 $object = '';
