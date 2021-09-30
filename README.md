@@ -4,7 +4,7 @@
 Donate link: https://droppa.co.za/magento-shipping-plugin
 Tags: Shipping, Courier
 Tested up to: 4.0.1
-Stable tag: 1.0.0
+Stable tag: 1.0.7
 Requires PHP: 7.0
 ```
 
@@ -97,3 +97,7 @@ php ./bin/magento cache:flush
 ### 1.0.4 And 1.0.5
 
 * Added a new rate calculator service that determines the quotation based on the product mass only.
+
+### 1.0.6 And 1.0.7
+
+* Re-evaluated the mass rate calculator and updated the service.

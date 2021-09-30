@@ -29,8 +29,7 @@ if (!class_exists('DroppaShipping')) {
         protected $logger;
         protected $cart;
         public string $_quote_endpoint = "https://www.droppa.co.za/droppa/services/plugins/fixed/rates";
-        // public string $_quote_endpoint = 'https://droppergroup.co.za/droppa/services/plugins/quotes';
-        // public string $_quote_endpoint = 'https://www.droppa.co.za/droppa/services/plugins/quotes';
+        // public string $_quote_endpoint = 'https://droppergroup.co.za/droppa/services/plugins/fixed/rates';
         public array $_quote_body = [];
         public float $_total_amount;
 
@@ -77,21 +76,12 @@ if (!class_exists('DroppaShipping')) {
             $method->setMethod($this->_code);
             $method->setMethodTitle($this->getConfigData('name'));
 
-            $_fullDimensionContents = [
-                'parcel_length' => (int)$request->getPackageDepth(),
-                'parcel_breadth' => (int)$request->getPackageWidth(),
-                'parcel_height' => (int)$request->getPackageHeight(),
-                'parcel_mass' => (int)$request->getPackageWeight()
-            ];
-
-            // $this->_quote_body = $this->quotesPluginAttributes(
-            //     $request->getOrigPostcode(),
-            //     $request->getDestPostcode(),
-            //     $request->getPackageWeight(),
-            //     $_fullDimensionContents
-            // );
-
-            $this->_quote_body = $this->quotesPluginAttributes($request->getPackageWeight(), $_fullDimensionContents);
+            $get_wooCommerce_rates = new Quotes(
+                $request->getPackageDepth(),
+                $request->getPackageWidth(),
+                $request->getPackageHeight(),
+                $request->getPackageWeight()
+            );
 
             $isModuleActive = $this->_scopeConfig->getValue('carriers/droppashipping/active', ScopeInterface::SCOPE_WEBSITES);
             $checkAPIKey = $this->_scopeConfig->getValue('carriers/droppashipping/api_key', ScopeInterface::SCOPE_WEBSITES);
@@ -105,9 +95,17 @@ if (!class_exists('DroppaShipping')) {
             if ($isModuleActive === "1" || $isModuleActive === 1) {
                 $useCurlObject = new Curl($checkAPIKey, $checkServiceKey);
 
+                $this->_quote_body = [
+                    "mass" => $request->getPackageWeight(),
+                    "dimensions" => [$get_wooCommerce_rates]
+                ];
+
+                $this->logger->log(100, json_encode($this->_quote_body, JSON_PRETTY_PRINT));
+
                 $response = $useCurlObject->curlEndpoint($this->_quote_endpoint, $this->_quote_body, 'POST');
+
                 $object = '';
-                // && $this->cart->getQuote()->getId()
+
                 if (isset($response)) {
                     $object = json_decode($response, true);
 
@@ -123,32 +121,6 @@ if (!class_exists('DroppaShipping')) {
                     }
                 }
             }
-        }
-
-        // public function quotesPluginAttributes(
-        //     $_pickUpPCode,
-        //     $_dropOffPCode,
-        //     $_product_total_mass,
-        //     $_parcelDimensionsArrayHolder
-        // ): array {
-        //     (array)$_get_product_attributes = new Quotes($_pickUpPCode, $_dropOffPCode, $_product_total_mass);
-
-        //     return [
-        //         "pickUpCode" => $_get_product_attributes->getPickUpCode(),
-        //         "dropOffCode" => $_get_product_attributes->getDropOffCode(),
-        //         "mass" => $_get_product_attributes->getWeight(),
-        //         "parcelDimensions" => [$_parcelDimensionsArrayHolder]
-        //     ];
-        // }
-
-        public function quotesPluginAttributes($_product_total_mass, $_parcelDimensionsArrayHolder)
-        {
-            $calculate_distance_for_quotes = [
-                "mass" => $_product_total_mass,
-                "dimensions" => [$_parcelDimensionsArrayHolder]
-            ];
-
-            if (is_array($calculate_distance_for_quotes)) return $calculate_distance_for_quotes;
         }
     }
 }
